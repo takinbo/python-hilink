@@ -1,0 +1,41 @@
+#!/usr/bin/env python3
+import argparse
+from hilink import HLClient
+
+parser = argparse.ArgumentParser(description='Reset network mode to LTE.')
+parser.add_argument(
+    'ipaddress', type=str, help='the ip address for the modem')
+parser.add_argument(
+    'username', type=str, help='the modem username')
+parser.add_argument(
+    'password', type=str, help='the modem password')
+
+args = parser.parse_args()
+
+client = HLClient(args.ipaddress)
+client.connect()
+client.obtain_token()
+
+res = client.login(args.username, args.password)
+assert res == 'OK'
+
+res = client.get_status()
+
+# if the current network type is not LTE
+if res['CurrentNetworkType'] != '19':
+    # set to lte-only mode
+    res = client.set_net_mode('03', '3FFFFFFF', '7FFFFFFFFFFFFFFF')
+    assert res == 'OK'
+
+    res = client.register()
+    assert res == 'OK'
+
+    # reset to auto mode
+    res = client.set_net_mode('00', '3FFFFFFF', '7FFFFFFFFFFFFFFF')
+    assert res == 'OK'
+
+    res = client.register()
+    assert res == 'OK'
+    print('RESET')
+else:
+    print('OK')
