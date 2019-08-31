@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+import argparse
+from hilink import HLClient
+
+parser = argparse.ArgumentParser(description='reboots the router when it is disconnected from the network')  # noqa
+parser.add_argument(
+    'ipaddress', type=str, help='the ip address for the router')
+parser.add_argument(
+    'username', type=str, help='the modem username')
+parser.add_argument(
+    'password', type=str, help='the modem password')
+
+args = parser.parse_args()
+
+client = HLClient(args.ipaddress)
+client.connect()
+client.obtain_token()
+
+res = client.login(args.username, args.password)
+assert res == 'OK'
+
+res = client.get_status()
+
+if res['CurrentNetworkType'] == '0':
+    res = client.reboot()
+    if res == 'OK':
+        print('OK')
+    else:
+        print('FAIL')

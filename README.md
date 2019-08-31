@@ -12,8 +12,7 @@ The library can be used for virtually any operation your HiLink-enabled Huawei
 router supports although future versions will directly include some of these 
 operations for easier usage.
 
-lte_mode
---------
+### lte_mode
 
 lte_mode is a utility script I wrote using the hilink library for a specific 
 usecase: if you're looking for a tool that would encourage your router to stay 
@@ -35,3 +34,14 @@ Usage:
 
 It will print out `OK` if the router is already in LTE mode or `RESET` if it 
 wasn't but it successfully reset it to LTE mode.
+
+### reboot_on_disconnect
+
+`reboot_on_disconnect` is a helper script for rebooting the router whenever it 
+detects that the router is offline. It could also be added to a task scheduler 
+to automatically reboot the router if it was disconnected from the network. 
+Rather than having to monitor the router yourself and auto-restart, you can 
+delegate that to this script and it would reboot the router as necessary.
+
+With a little tweak, the script could be made to force a reboot of the router 
+if (despite being connected to the network) there is no internet connection.
