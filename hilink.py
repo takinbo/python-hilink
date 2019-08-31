@@ -210,3 +210,14 @@ class HLClient(object):
         data['Rat'] = ''
 
         return self.post('net/register', data)
+
+    def device_control(self, code: str) -> HLResponse:
+        '''
+        '''
+        data = HLRequest()
+        data['Control'] = code
+
+        return self.post('device/control', data)
+
+    def reboot(self) -> HLResponse:
+        return self.device_control('1')
